@@ -61,12 +61,12 @@ public class GamePanel extends JFrame implements MouseListener, MouseMotionListe
          * 此处本来为解决首张牌始终出现在左上角而写
          * c.setLocation(1920,1080);
          */
-        GameInit.cards[0].setLocation(1920,1080);
+//        GameInit.cards[0].setLocation(1920,1080);
         for (int i=0; i<11; i++) {
             frameCards[i] = new FrameCard();
             add(frameCards[i]);
             layeredPane.setLayer(frameCards[i], 0);
-            frameCards[i].setSize(MyTools.cardSizeX, MyTools.cardSizeY);
+            frameCards[i].setSize(MyTools.frameSizeX, MyTools.frameSizeY);
             if (i < 4) {
                 frameCards[i].setLocation(MyTools.topPileFirstX+MyTools.pileHorizontalGap*(i)
                         ,MyTools.topPileFirstY);
@@ -107,6 +107,40 @@ public class GamePanel extends JFrame implements MouseListener, MouseMotionListe
         display();
     }
 
+    public int ifRealesedAtAnyPile(Point apoint) {
+        for (int i=0; i<11; i++) {
+            if (frameCards[i].contains(SwingUtilities.convertPoint(this,apoint,frameCards[i]))) {
+                System.out.printf("frameIndex:%d\n", i);
+                return i<4?i+8:i-3;
+            }
+        }
+        return -1;
+    }
+
+    public boolean ifDragSuccess(Point apoint) {
+        int pileIndex = ifRealesedAtAnyPile(apoint);
+
+        if (pileIndex == -1) {
+            return false;
+        }
+        toThisPile = GameInit.piles[pileIndex];
+        System.out.printf("pileIndex: %d; pileClass: %s\n",pileIndex,toThisPile.getClass());
+        if (pileIndex >= 1 && pileIndex <=7) {
+            if (toThisPile.getSize() > 0) {
+                return toThisPile.canAddCard(movingCardList.get(0));
+            } else {
+                return movingCardList.get(0).getPoint() == 12;
+            }
+        }
+        if (pileIndex >= 8 && pileIndex <= 11 && movingCardList.size()==1) {
+            if (toThisPile.getSize() > 0) {
+                return toThisPile.canAddCard(movingCardList.get(0));
+            } else {
+                return movingCardList.get(0).getPoint() == 0;
+            }
+        }
+        return false;
+    }
 
     /**
      * Invoked when the mouse button has been clicked (pressed
@@ -178,7 +212,6 @@ public class GamePanel extends JFrame implements MouseListener, MouseMotionListe
                         movingCardList.add(fromThisPile.get(i));
                         imigratePoint.add(SwingUtilities.convertPoint(c, e.getPoint(), fromThisPile.get(i)));
                         layeredPane.setLayer(c,layerCount++);
-                        System.out.printf("card : %s  imigrate : %s", c, SwingUtilities.convertPoint(c, e.getPoint(), fromThisPile.get(i)));
                     }
                 }
 
@@ -200,6 +233,10 @@ public class GamePanel extends JFrame implements MouseListener, MouseMotionListe
      */
     @Override
     public void mouseReleased(MouseEvent e) {
+        System.out.println(ifDragSuccess(e.getLocationOnScreen()));
+        if (ifDragSuccess(e.getLocationOnScreen())) {
+
+        }
 
     }
 

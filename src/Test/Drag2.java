@@ -85,7 +85,8 @@ public class Drag2 extends JFrame implements MouseMotionListener, MouseListener 
      */
     @Override
     public void mouseReleased(MouseEvent e) {
-
+        Point p = e.getLocationOnScreen();
+        System.out.printf("current component: %s", getComponentAt(p).getClass());
     }
 
     /**
@@ -125,14 +126,15 @@ public class Drag2 extends JFrame implements MouseMotionListener, MouseListener 
     public void mouseDragged(MouseEvent e) {
         if (e.getSource().equals(button)) {
             Point p = e.getPoint();
+//            System.out.printf("dragPoint: %s", p);
             int cx = (int) p.getX();
             int cy = (int) p.getY();
-            System.out.println(cx+" "+cy);
+//            System.out.println(cx+" "+cy);
             Point point = SwingUtilities.convertPoint(button, p, this);
-            System.out.println("before translate:"+point);
+//            System.out.println("before translate:"+point);
             point.translate(-x, -y);
             button.setLocation(point);
-            System.out.println("after translate"+point);
+//            System.out.println("after translate"+point);
         }
     }
 

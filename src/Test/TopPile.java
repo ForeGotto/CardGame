@@ -4,9 +4,7 @@ package Test;
  * Created by hcq on 2016/10/13.
  */
 public class TopPile extends CardPile {
-    static {
-        pilePriority = 2;
-    }
+    static int pilePriority = 1;
 
     public TopPile(int x, int y) {
         super(x, y);
@@ -35,14 +33,13 @@ public class TopPile extends CardPile {
      */
     @Override
     public boolean canAddCard(Card c) {
-        if (c.getPile().getPilePriority() < getPilePriority()) {
-            /**
-            * @TODO 最多只能向最后安放区添加一张牌,应该在鼠标监听处实现
-            **/
-            if (card.peek().canBeLaidBelow(c)) {
-                return true;
-            }
-        }
-        return false;
+        if (c.getPile().getPilePriority() <= getPilePriority() && card.peek().canBeLaidBelow(c)) return true;
+        else return false;
     }
+
+    @Override
+    public int getPilePriority() {
+        return 2;
+    }
+
 }

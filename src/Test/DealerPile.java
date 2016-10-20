@@ -8,9 +8,7 @@ package Test;
  */
 public class DealerPile extends CardPile {
 
-    static {
-        pilePriority = 0;
-    }
+    static int pilePriority = 0;
 
     int currentShow;
 
@@ -70,5 +68,10 @@ public class DealerPile extends CardPile {
     @Override
     public boolean canAddCard(Card c) {
         return false;
+    }
+
+    @Override
+    public int getPilePriority() {
+        return 0;
     }
 }

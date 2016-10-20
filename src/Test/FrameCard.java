@@ -42,6 +42,6 @@ public class FrameCard extends JComponent {
         Graphics2D g2d = (Graphics2D) g;
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setColor(Color.GREEN);
-        g2d.drawRoundRect(0,0,getWidth()-1,getHeight()-1,15,15);
+        g2d.drawRoundRect(0,0,MyTools.cardSizeX-1,MyTools.cardSizeY-1,15,15);
     }
 }

@@ -10,7 +10,6 @@ public abstract class CardPile {
     public int highLayer;
     int x;
     int y;
-    public static int pilePriority;
 
     public CardPile(int x, int y) {
         this.x = x;
@@ -58,9 +57,7 @@ public abstract class CardPile {
         return y;
     }
 
-    public int getPilePriority() {
-        return pilePriority;
-    }
+    public abstract int getPilePriority();
 
     public int getSize() {
         return card.size();

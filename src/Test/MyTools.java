@@ -7,15 +7,17 @@ import java.util.Random;
  */
 public class MyTools {
     public static final int cardSizeX = 170;
-    public static final int cardSizeY = 250;
-    public static final int cardVerticalOffset = 35;
+    public static final int cardSizeY = 200;
+    public static final int cardVerticalOffset = 20;
     public static final int pileHorizontalGap = 240;
     public static final int topPileFirstX = 865;
     public static final int topPileFirstY = 100;
     public static final int movingPileFirstX = 145;
-    public static final int movingPileFirstY = 500;
+    public static final int movingPileFirstY = 600;
     public static final int dealerPileFirstX = 145;
     public static final int dealerPileFirstY = 100;
+    public static final int frameSizeX = 170;
+    public static final int frameSizeY = cardSizeY + 12 * cardVerticalOffset;
     public static int [] getDots() {
         Random random = new Random();
         int rank[] = new int[52];
