@@ -187,8 +187,17 @@ public class Card extends JComponent{
      * @param c
      * @return 如果this小于c的点数，则返回真
      */
-    boolean isLessThan(Card c) {
-        return this.point < c.getPoint();
+    boolean isPointSuit(Card c) {
+        switch (getPile().getPilePriority()) {
+            case 0:
+                return false;
+            case 1:
+                return this.point > c.getPoint();
+            case 2:
+                return this.point < c.getPoint();
+            default:
+                return false;
+        }
     }
 
     /**
@@ -198,15 +207,18 @@ public class Card extends JComponent{
      * @return 如，this在TopPile中，则颜色相同匹配，如this在MovingPile中，则颜色相反匹配
      */
     boolean isColorSuit(Card c) {
-        switch (getPile().getPilePriority()) {
-            case 0:
-                System.out.println("ERROR! can't move card to dealer pile");
-                return false;
+//        System.out.printf("目标牌堆类:%s, 目标牌堆优先级:%d\n",getPile().getClass(),getPile().getPilePriority());
+        switch (this.getPile().getPilePriority()) {
+//            case 0:
+//                System.out.println("ERROR! can't move card to dealer pile");
+//                return false;
             case 1:
-                System.out.println("moving a card to table pile");
+//                System.out.println("正确选择了所属牌堆");
+//                System.out.printf("moving card:%s to table pile :%s\n",c.spoint,spoint);
                 return this.color != c.getColor();
             case 2:
-                System.out.println("moving a card to last pile");
+//                System.out.println("错误的选择了所属牌堆");
+//                System.out.printf("moving card:%s to top pile :%s\n",c.spoint,spoint);
                 return this.suit == c.getSuit();
             default:
                 return false;
@@ -215,12 +227,20 @@ public class Card extends JComponent{
 
     /**
      * 判断this能否放到所给牌之下（即所给参数能否放到当前牌堆顶部）
-     * 主要调用isColorSuit(Card c)，isLessThan(Card c)
+     * 主要调用isColorSuit(Card c)，isPointSuit(Card c)
      * @param c
      * @return
      */
     boolean canBeLaidBelow(Card c) {
-        return ((this.isColorSuit(c)) && (this.isLessThan(c)));
+//        if (this.isColorSuit(c)) {
+//            if (this.isPointSuit(c)) {
+//                return true;
+//            }
+//            System.out.println("问题在isPointSuit(c)");
+//        }
+//        System.out.println("问题在isColorSuit(c)");
+//        return false;
+        return ((this.isColorSuit(c)) && (this.isPointSuit(c)));
     }
 
 //    public static void main(String[] args) {
