@@ -22,7 +22,8 @@ public class GamePanel extends JFrame implements MouseListener, MouseMotionListe
     CardPile fromThisPile = null;
     CardPile toThisPile = null;
     JButton reInit;
-    Point pressedPoint = null;
+//    Point pressedPoint = null;
+    Stack<Point> imigratePoint = new Stack<>();
     /**
      * Constructs a new frame that is initially invisible.
      * <p>
@@ -120,7 +121,7 @@ public class GamePanel extends JFrame implements MouseListener, MouseMotionListe
 //        System.out.println(x+" "+y);
         DealerPile dealer = GameInit.dealerPile;
         int dealerSize = dealer.getSize();
-        if (e.getSource() instanceof Card &&
+        if (e.getSource() instanceof Card && !(((Card) e.getSource()).isFaceUp()) &&
                 ((Card)e.getSource()).getPile().equals(GameInit.dealerPile) &&
                 dealerSize>0) {
 //            System.out.println("change cards");
@@ -160,10 +161,28 @@ public class GamePanel extends JFrame implements MouseListener, MouseMotionListe
 //        int y = e.getY();
         if (e.getSource() instanceof Card && ((Card) e.getSource()).isFaceUp()) {
             Card c = (Card) e.getSource();
-//            if (!(c.getPile() instanceof DealerPile)) {
-//            }
-            pressedPoint = SwingUtilities.convertPoint(c, e.getPoint(),this);
-            System.out.printf("point:%s pile=%s\n", pressedPoint, c.getPile());
+            if (! (c.getPile() instanceof TopPile)) {
+//                pressedPoint = e.getPoint();
+//                Point pressedPoint = SwingUtilities.convertPoint(c, e.getPoint(),this);
+//                System.out.printf("point:%s pile=%s\n", pressedPoint, c.getPile());
+                fromThisPile = c.getPile();
+                if (fromThisPile instanceof DealerPile) {
+                    movingCardList.add(c);
+                    layeredPane.setLayer(c,JLayeredPane.DRAG_LAYER);
+                    imigratePoint.add(e.getPoint());
+                }
+                if (fromThisPile instanceof MovingPile) {
+                    int startIndex = fromThisPile.card.indexOf(c);
+                    int layerCount = JLayeredPane.DRAG_LAYER - fromThisPile.getSize() + startIndex;
+                    for (int i=startIndex; i<fromThisPile.getSize(); i++) {
+                        movingCardList.add(fromThisPile.get(i));
+                        imigratePoint.add(SwingUtilities.convertPoint(c, e.getPoint(), fromThisPile.get(i)));
+                        layeredPane.setLayer(c,layerCount++);
+                        System.out.printf("card : %s  imigrate : %s", c, SwingUtilities.convertPoint(c, e.getPoint(), fromThisPile.get(i)));
+                    }
+                }
+
+            }
         }
 
 //        Card c = (Card) e.getSource();
@@ -219,7 +238,16 @@ public class GamePanel extends JFrame implements MouseListener, MouseMotionListe
      */
     @Override
     public void mouseDragged(MouseEvent e) {
-        System.out.printf("dragged point:%s\n",e.getPoint());
+        if (!movingCardList.empty()) {
+            Point dragPoint = SwingUtilities.convertPoint(movingCardList.get(0), e.getPoint(), this);
+//            System.out.printf("dragged point before translate:%s\n",dragPoint);
+            for (int i=0; i<movingCardList.size(); i++) {
+                Point p = (Point) dragPoint.clone();
+                p.translate(-imigratePoint.get(i).x, -imigratePoint.get(i).y);
+//                System.out.printf("dragged point after translate:%s\n",p);
+                movingCardList.get(i).setLocation(p);
+            }
+        }
     }
 
     /**
