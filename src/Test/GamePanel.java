@@ -17,7 +17,7 @@ public class GamePanel extends JFrame implements MouseListener, MouseMotionListe
         gameInit = new GameInit();
     }
 //    FrameCard[] frameCards = new FrameCard[11];
-    FrameCard[] frameCards = new FrameCard[12];
+    FrameCard[] frameCards = new FrameCard[13];
     JLayeredPane layeredPane;
     Stack<Card> movingCardList = new Stack<>();
     CardPile fromThisPile = null;
@@ -44,6 +44,7 @@ public class GamePanel extends JFrame implements MouseListener, MouseMotionListe
         setLayout(null);
         setBounds(0,0,1920,1080);
         layeredPane = getLayeredPane();
+        layeredPane.setDoubleBuffered(true);
         Container contentPane = getContentPane();
         setVisible(true);
 
@@ -76,7 +77,7 @@ public class GamePanel extends JFrame implements MouseListener, MouseMotionListe
 //                        ,MyTools.movingPileFirstY);
 //            }
 //        }
-        for (int i=0; i<12; i++) {
+        for (int i=0; i<13; i++) {
             frameCards[i] = new FrameCard();
             add(frameCards[i]);
             layeredPane.setLayer(frameCards[i], 0);
@@ -89,10 +90,14 @@ public class GamePanel extends JFrame implements MouseListener, MouseMotionListe
                 frameCards[i].setLocation(MyTools.movingPileFirstX+MyTools.pileHorizontalGap*(i-1)
                         ,MyTools.movingPileFirstY);
             }
-            if(i > 7){
+            if(i > 7 && i < 12){
                 frameCards[i].setSize(MyTools.frameSizeX, MyTools.cardSizeY);
                 frameCards[i].setLocation(MyTools.topPileFirstX+MyTools.pileHorizontalGap*(i-8)
                         ,MyTools.topPileFirstY);
+            }
+            if (i == 12) {
+                frameCards[i].setSize(MyTools.frameSizeX,MyTools.cardSizeY);
+                frameCards[i].setLocation(MyTools.dealerPileFirstX, MyTools.dealerPileFirstY);
             }
         }
         addMouseListener(this);
@@ -191,37 +196,11 @@ public class GamePanel extends JFrame implements MouseListener, MouseMotionListe
 //        System.out.println(x+" "+y);
         DealerPile dealer = GameInit.dealerPile;
         int dealerSize = dealer.getSize();
-//        if (e.getSource() instanceof Card && !(((Card) e.getSource()).isFaceUp()) &&
-//                ((Card)e.getSource()).getPile().equals(GameInit.dealerPile) &&
-//                dealerSize>0) {
-////            System.out.println("change cards");
-//            if (dealerSize > 1) {
-//                if (dealer.currentShow > 0) {
-//                    if (dealer.currentShow < dealerSize) {
-//                        layeredPane.setLayer(dealer.get(dealer.currentShow), 1);
-//                    }
-//                    dealer.currentShow--;
-//                    layeredPane.setLayer(dealer.get(dealer.currentShow), 2);
-//                } else {
-//                    dealer.currentShow = dealerSize;
-//                    layeredPane.setLayer(dealer.get(0),1);
-//                }
-//            } else {
-//                if (dealer.currentShow == dealerSize) {
-//                    dealer.currentShow--;
-//                } else {
-//                    dealer.currentShow = dealerSize;
-//                }
-//                layeredPane.setLayer(dealer.get(dealer.currentShow),2);
-//            }
-//            dealer.show();
-//        } else if (e.getSource().equals(reInit)) {
-//            refresh();
-//        }
-//        System.out.printf("click on this : %s\n",e.getSource());
-//        Point apoint = SwingUtilities.convertPoint(this, e.getLocationOnScreen(), frameCards[0]);
-//        System.out.printf("click on this point:%S, and that's %s on dealer\n",e.getLocationOnScreen(),apoint);
-        if (MyTools.isClickedOnDealer(e.getXOnScreen(), e.getYOnScreen()) && dealerSize>0) {
+
+//        if (MyTools.isClickedOnDealer(e.getXOnScreen(), e.getYOnScreen()) && dealerSize>0) {
+        if (frameCards[12].contains(SwingUtilities.convertPoint(this, e.getLocationOnScreen(),frameCards[12]))
+                && dealerSize>0) {
+            System.out.println("正在发牌区点击"+dealer.currentShow);
             if (dealerSize > 1) {
                 if (dealer.currentShow > 0) {
                     if (dealer.currentShow < dealerSize) {
@@ -263,18 +242,23 @@ public class GamePanel extends JFrame implements MouseListener, MouseMotionListe
 //                Point pressedPoint = SwingUtilities.convertPoint(c, e.getPoint(),this);
 //                System.out.printf("point:%s pile=%s\n", pressedPoint, c.getPile());
                 fromThisPile = c.getPile();
+                Point apoint = e.getPoint();
                 if (fromThisPile instanceof DealerPile) {
                     movingCardList.add(c);
                     layeredPane.setLayer(c,JLayeredPane.DRAG_LAYER);
-                    imigratePoint.add(e.getPoint());
+                    imigratePoint.add(apoint);
                 }
                 if (fromThisPile instanceof MovingPile) {
                     int startIndex = fromThisPile.card.indexOf(c);
                     int layerCount = JLayeredPane.DRAG_LAYER - fromThisPile.getSize() + startIndex;
+                    int cx = apoint.x;
+                    int cy = apoint.y;
                     for (int i=startIndex; i<fromThisPile.getSize(); i++) {
                         movingCardList.add(fromThisPile.get(i));
-                        imigratePoint.add(SwingUtilities.convertPoint(c, e.getPoint(), fromThisPile.get(i)));
-                        layeredPane.setLayer(c,layerCount++);
+//                        imigratePoint.add(SwingUtilities.convertPoint(c, apoint, fromThisPile.get(i)));
+                        imigratePoint.add(new Point(cx,cy));
+                        cy += MyTools.cardVerticalOffset;
+                        layeredPane.setLayer(fromThisPile.get(i),layerCount++);
                     }
                 }
 
@@ -314,13 +298,14 @@ public class GamePanel extends JFrame implements MouseListener, MouseMotionListe
             }
             if (fromThisPile instanceof MovingPile && fromThisPile.getSize()>0) {
                 fromThisPile.peek().setFaceUp(true);
+                fromThisPile.peek().repaint();
             }
             movingCardList.removeAllElements();
             fromThisPile = null;
             toThisPile = null;
         } else {
             if (fromThisPile instanceof DealerPile) {
-                layeredPane.setLayer(movingCardList.get(0), 1);
+                layeredPane.setLayer(movingCardList.get(0), 2);
             }
             if (fromThisPile instanceof MovingPile) {
                 fromThisPile.setHighLayer(fromThisPile.getHighLayer()-movingCardList.size()+1);

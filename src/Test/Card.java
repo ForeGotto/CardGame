@@ -163,6 +163,7 @@ public class Card extends JComponent{
                     break;
                 case 9:
                     spoint = "10 "+tmpstr;
+                    break;
                 case 10:
                     spoint = "J  "+tmpstr;
                     break;
@@ -192,9 +193,9 @@ public class Card extends JComponent{
             case 0:
                 return false;
             case 1:
-                return this.point > c.getPoint();
+                return this.point == c.getPoint()+1;
             case 2:
-                return this.point < c.getPoint();
+                return this.point == c.getPoint()-1;
             default:
                 return false;
         }

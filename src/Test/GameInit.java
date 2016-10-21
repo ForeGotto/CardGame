@@ -43,7 +43,7 @@ public class GameInit {
         int [] a = MyTools.getDots();
         for (int i=0; i<52; i++) {
             cards[i].setDot(a[i]);
-            System.out.printf("%d %s\n",i,cards[i].spoint);
+            System.out.printf("index: %d dot: %d point:%s\n",i,a[i],cards[i].spoint);
         }
         //首先把所有牌堆清空，以便重新初始化
         for (CardPile cp : piles) {
