@@ -33,7 +33,7 @@ public abstract class CardPile {
     }
 
     public void removeCard(Card c) {
-        card.pop();
+        card.remove(c);
         highLayer-=1;
     }
 

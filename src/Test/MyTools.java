@@ -42,7 +42,7 @@ public class MyTools {
     }
 
     public static boolean isClickedOnDealer(int x, int y) {
-        if (x>dealerPileFirstX && x<dealerPileFirstX+cardSizeX && y>cardSizeY && y<dealerPileFirstY+cardSizeY) {
+        if (x>dealerPileFirstX && x<dealerPileFirstX+cardSizeX && y>dealerPileFirstY && y<dealerPileFirstY+cardSizeY) {
             return true;
         }
         return false;

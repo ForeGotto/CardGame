@@ -38,6 +38,9 @@ public class DealerPile extends CardPile {
 //        System.out.println("currentShow:"+currentShow+"highLayer: "+highLayer);
         if (card.size() > 1) {
             if (currentShow == 0) {
+                for (Card acard : card) {
+                    acard.setFaceUp(false);
+                }
                 get(currentShow).setFaceUp(true);
                 get(currentShow).setLocation(x+MyTools.pileHorizontalGap,y);
             }
