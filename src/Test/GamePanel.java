@@ -102,10 +102,10 @@ public class GamePanel extends JFrame implements MouseListener, MouseMotionListe
         }
         addMouseListener(this);
         display();
-        reInit = new JButton("reinit");
+        reInit = new JButton("重新开始");
         add(reInit);
         reInit.addMouseListener(this);
-        reInit.setBounds(20,20,30,30);
+        reInit.setBounds(100,900,100,30);
         contentPane.add(reInit);
     }
 
@@ -222,7 +222,10 @@ public class GamePanel extends JFrame implements MouseListener, MouseMotionListe
             }
             dealer.show();
         } else if (e.getSource().equals(reInit)) {
-            refresh();
+            int op = JOptionPane.showConfirmDialog(null,"确认重新开始？",null,JOptionPane.OK_CANCEL_OPTION);
+            if (op == JOptionPane.OK_OPTION) {
+                refresh();
+            }
         }
     }
 

@@ -2,6 +2,7 @@ package Test;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 /**
  * 代表一张牌，属性有：(总点数，点数，字面点数)，(花色，颜色，是否朝上),(当前牌堆优先级)
@@ -89,16 +90,22 @@ public class Card extends JComponent{
         g.setFont(newfont);
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         if (faceUp){
-            g2d.setColor(Color.white);
-            g2d.fillRoundRect(0, 0, getWidth(), getHeight(),20,20);
-            g2d.setColor(Color.darkGray);
-            g.setColor(currentColor);
-            g2d.drawString(spoint,10,25);
+            Graphics2D g2 = (Graphics2D) g.create();
+            g2.setColor(Color.white);
+            g2.fillRoundRect(0, 0, getWidth(), getHeight(),20,20);
+            g2.setColor(currentColor);
+            g2.drawString(spoint,10,25);
+            g2.rotate(Math.toRadians(180),getWidth()/2,getHeight()/2);
+            g2.drawString(spoint,10,25);
         } else {
             g2d.setColor(Color.gray);
             g2d.fillRoundRect(0, 0, getWidth(), getHeight(),20,20);
             g2d.setColor(Color.BLACK);
-            g2d.fillOval(100,100,50,50);
+            int[] x1 = {85,45,125,85};
+            int[] y1 = {50,119,119,50};
+            int[] y2 = {142,73,73,142};
+            g2d.fillPolygon(x1,y1,4);
+            g2d.fillPolygon(x1,y2,4);
         }
         g2d.setColor(Color.GREEN);
         g2d.drawRoundRect(0,0,getWidth()-1,getHeight()-1,15,15);

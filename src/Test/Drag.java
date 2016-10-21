@@ -28,8 +28,14 @@ public class Drag extends JComponent implements MouseListener, MouseMotionListen
 
     @Override
     protected void paintComponent(Graphics g) {
-        g.setColor(Color.darkGray);
-        g.fillRect(x, y, 100,200);
+        Graphics2D g2d = (Graphics2D) g;
+        g2d.setColor(Color.yellow);
+        g2d.fillRect(x,y,100,200);
+        g2d.setColor(Color.gray);
+        g2d.drawString("upsite", 20, 20);
+        g.drawRect(x, y, 100,200);
+        g2d.scale(1.0, -1.0);
+        g2d.drawString("downsite",20,20);
 //        System.out.println("here it paint");
     }
 
@@ -114,7 +120,9 @@ public class Drag extends JComponent implements MouseListener, MouseMotionListen
     public static void main(String [] args) {
         JFrame frame = new JFrame();
         frame.setBounds(0, 0, 1920, 1080);
-        frame.setGlassPane(new Drag());
+        Drag drag = new Drag();
+        drag.setSize(100,200);
+        frame.setGlassPane(drag);
         frame.setVisible(true);
         frame.getGlassPane().setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
