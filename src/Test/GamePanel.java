@@ -204,13 +204,13 @@ public class GamePanel extends JFrame implements MouseListener, MouseMotionListe
             if (dealerSize > 1) {
                 if (dealer.currentShow > 0) {
                     if (dealer.currentShow < dealerSize) {
-                        layeredPane.setLayer(dealer.get(dealer.currentShow), 1);
+                        layeredPane.setLayer(dealer.get(dealer.currentShow), 0);
                     }
                     dealer.currentShow--;
                     layeredPane.setLayer(dealer.get(dealer.currentShow), 2);
                 } else {
                     dealer.currentShow = dealerSize;
-                    layeredPane.setLayer(dealer.get(0),1);
+                    layeredPane.setLayer(dealer.get(0),0);
                 }
             } else {
                 if (dealer.currentShow == dealerSize) {
@@ -308,7 +308,9 @@ public class GamePanel extends JFrame implements MouseListener, MouseMotionListe
             toThisPile = null;
         } else {
             if (fromThisPile instanceof DealerPile) {
-                layeredPane.setLayer(movingCardList.get(0), 2);
+                layeredPane.setLayer(movingCardList.get(0), 1);
+                movingCardList.get(0).setLocation(MyTools.dealerPileFirstX+MyTools.pileHorizontalGap,
+                        MyTools.dealerPileFirstY);
             }
             if (fromThisPile instanceof MovingPile) {
                 fromThisPile.setHighLayer(fromThisPile.getHighLayer()-movingCardList.size()+1);
